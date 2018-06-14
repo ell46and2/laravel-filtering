@@ -1,44 +1,12 @@
-<p>
-	<a href="{{ route('courses.index') }}">Clear all filters</a>
-</p>
+@if(count(array_intersect(array_keys(request()->query()), array_keys($mappings))))
+	<p>
+		<a href="{{ route('courses.index') }}">Clear all filters</a>
+	</p>
+@endif
 
-@include('courses.partials._filter-list', [
-	'map' => [
-		'free' => 'Free',
-		'premium' => 'Premium'
-	],
-	'key' => 'access'
-])
 
-@include('courses.partials._filter-list', [
-	'map' => [
-		'beginner' => 'Beginner',
-		'intermediate' => 'Intermediate',
-		'advanced' => 'Advanced'
-	],
-	'key' => 'difficulty'
-])
+@foreach($mappings as $key => $map)
+	@include('courses.partials._filter-list', compact('key', 'map'))	
+@endforeach
 
-@include('courses.partials._filter-list', [
-	'map' => [
-		'snippet' => 'Snippet',
-		'project' => 'Project',
-		'theory' => 'Theory'
-	],
-	'key' => 'type'
-])
 
-@include('courses.partials._filter-list', [
-	'map' => $subjects,
-	'key' => 'subject'
-])
-
-@auth
-	@include('courses.partials._filter-list', [
-		'map' => [
-			'true' => 'Started',
-			'false' => 'Not started'
-		],
-		'key' => 'started'
-	])
-@endauth

@@ -9,6 +9,7 @@ use App\Filters\Course\StartedFilter;
 use App\Filters\Course\SubjectFilter;
 use App\Filters\Course\TypeFilter;
 use App\Filters\FiltersAbstract;
+use App\Subject;
 
 class CourseFilters extends FiltersAbstract
 {
@@ -20,4 +21,36 @@ class CourseFilters extends FiltersAbstract
 		'started' => StartedFilter::class,
 		'views' => ViewsOrder::class,
 	];
+
+	public static function mappings()
+	{
+	    $map = [
+	    	'access' => [
+	    		'free' => 'Free',
+				'premium' => 'Premium'
+	    	],
+	    	'difficulty' => [
+	    		'beginner' => 'Beginner',
+				'intermediate' => 'Intermediate',
+				'advanced' => 'Advanced'
+	    	],
+	    	'type' => [
+	    		'snippet' => 'Snippet',
+				'project' => 'Project',
+				'theory' => 'Theory'
+	    	],
+	    	'subject' => Subject::get()->pluck('name', 'slug'),
+	    ];
+
+	    if(auth()->check()) {
+	    	$map = array_merge($map, [
+	    		'started' => [
+		    		'true' => 'Started',
+					'false' => 'Not started'
+				]
+	    	]);
+	    }
+
+	    return $map;
+	}
 }
